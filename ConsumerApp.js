@@ -6,6 +6,9 @@
    node ConsumerApp.js 5000 localhost 8080 8888
 */
 
+// TODO: 1) gracefully deal with a non reacheable queue!
+//       3) Refcator serverIp method to common/utils class (cortex pkg)
+
 var http = require( 'http' )
 var express = require('express');
 var app = express();
@@ -66,7 +69,7 @@ var interval = setInterval( function( ) {
     http.request(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function( chunk ) {
-            console.log( 'BODY: ' + chunk );
+            console.log( 'Request Processed [%s]: ' + chunk, new Date( ).toISOString( ) );
         });
     }).end();
 }, processingDelay );

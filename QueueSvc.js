@@ -6,6 +6,8 @@
    node QueueSvc.js 9999
 */
 
+// TODO : generate a unique UUID for each item and stamp as they come in
+
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser')
