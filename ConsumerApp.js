@@ -68,7 +68,15 @@ var interval = setInterval( function( ) {
     http.request(options, function(res) {
         res.setEncoding('utf8');
         res.on('data', function( chunk ) {
-            console.log( 'Request Processed [%s]: ' + chunk, new Date( ).toISOString( ) );
+            var timeStamp = new Date( ).toISOString( )
+            var json = JSON.parse( chunk )
+
+            if( json.Response == "(Empty)" ) {
+                console.log( 'Queue Empty [%s]', timeStamp )
+            }
+            else {
+                console.log( 'Request Processed [%s]: ' + chunk, timeStamp );
+            }
         });
     }).end();
 }, processingDelay );

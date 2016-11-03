@@ -6,16 +6,16 @@
    node QueueSvc.js 9999
 */
 
-// TODO : generate a unique UUID for each item and stamp as they come in
-
+// import dependencies
 var express = require('express');
-var app = express();
 var bodyParser = require('body-parser')
 var queueLib = require ('./node_modules/queue/Queue.js')
 var utils = require ('./Utils.js')
 
-
 // initialize queue service
+var app = express();
+var uuidCounter = 1;
+
 var queue = queueLib.Queue;
 app.use( bodyParser.json( ) );
 
@@ -33,18 +33,19 @@ if( process.argv.length > 2 )
 }
 
 app.post( '/put', function( req, res ) {
-  queue.enqueue( req.body );
-  console.log( "received: %s", req.body.id );
-  res.send( { Response : "Added new document to queue: " + req.body.id } );
+    req.body.uuid = uuidCounter ++;
+    queue.enqueue( req.body );
+    console.log( "Storing as UUID=%s, content: %s", req.body.uuid, JSON.stringify( req.body ) );
+    res.send( { Response : "Added new document to queue: " + req.body.uuid } );
 } )
 
 app.get('/get', function (req, res) {
   var msg = queue.dequeue( );
   if( msg != null ) {
-    res.send( { Response : msg.id } );
+    res.send( { Response : msg } );
   }
   else {
-    res.send( { Response : 'Empty' } );
+    res.send( { Response : '(Empty)' } );
   }
 })
 
