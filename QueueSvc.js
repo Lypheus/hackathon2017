@@ -12,6 +12,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser')
 var queueLib = require ('./node_modules/queue/Queue.js')
+var utils = require ('./Utils.js')
+
 
 // initialize queue service
 var queue = queueLib.Queue;
@@ -52,20 +54,5 @@ app.get('/depth', function (req, res) {
 
 // build a server instance start waiting on incoming requests on the specified port
 var server = app.listen( port, function () {
-   console.log("Example app listening at http://%s:%s", getServerIp( ), port )
+   console.log("Example app listening at http://%s:%s", utils.getServerIp, port )
 })
-
-/* Returns the best match for machine ip - tries to use an externally addressable
-   IP over internal - fails back on 0.0.0.0 */
-function getServerIp( ) {
-  var os = require('os');
-  var ifaces = os.networkInterfaces();
-  var values = Object.keys(ifaces).map(function(name) {
-    return ifaces[name];
-  });
-  values = [].concat.apply([], values).filter(function(val){
-    return val.family == 'IPv4' && val.internal == false;
-  });
-
-  return values.length ? values[0].address : '0.0.0.0';
-}

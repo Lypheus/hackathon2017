@@ -7,7 +7,6 @@
 */
 
 // TODO: 1) gracefully deal with a non reacheable queue!
-//       3) Refcator serverIp method to common/utils class (cortex pkg)
 
 var http = require( 'http' )
 var express = require('express');
@@ -73,23 +72,3 @@ var interval = setInterval( function( ) {
         });
     }).end();
 }, processingDelay );
-
-// build a server instance start waiting on incoming requests on the specified port
-var server = app.listen( port, function () {
-   console.log("Example app listening at http://%s:%s", getServerIp( ), port )
-})
-
-/* Returns the best match for machine ip - tries to use an externally addressable
-   IP over internal - fails back on 0.0.0.0 */
-function getServerIp( ) {
-  var os = require('os');
-  var ifaces = os.networkInterfaces();
-  var values = Object.keys(ifaces).map(function(name) {
-    return ifaces[name];
-  });
-  values = [].concat.apply([], values).filter(function(val){
-    return val.family == 'IPv4' && val.internal == false;
-  });
-
-  return values.length ? values[0].address : '0.0.0.0';
-}
