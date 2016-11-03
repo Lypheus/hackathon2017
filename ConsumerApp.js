@@ -6,8 +6,6 @@
    node ConsumerApp.js 5000 localhost 8080 8888
 */
 
-// TODO: 1) gracefully deal with a non reacheable queue!
-
 var http = require( 'http' )
 var express = require('express');
 var app = express();
@@ -77,6 +75,8 @@ var interval = setInterval( function( ) {
             else {
                 console.log( 'Request Processed [%s]: ' + chunk, timeStamp );
             }
-        });
+        })
+    }).on('error',function(e){
+        console.log( 'Queue Unavailable, message: %s', e.message )
     }).end();
 }, processingDelay );
